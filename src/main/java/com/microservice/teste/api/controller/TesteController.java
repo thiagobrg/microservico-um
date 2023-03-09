@@ -1,6 +1,10 @@
 package com.microservice.teste.api.controller;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +21,9 @@ import org.springframework.web.client.RestTemplate;
 @CrossOrigin(originPatterns = "*", maxAge = 3600)
 public class TesteController {
 	
+	@Autowired
+	private DiscoveryClient discoveryClient;
+	
 	@Value("${microservice.teste}")
 	private String value;
 	
@@ -26,6 +33,12 @@ public class TesteController {
 	@GetMapping
 	public String teste() {
 		return "Value: " + value;
+	}
+	
+	@GetMapping("/list")
+	public List<String> list() {
+		List<String> list = discoveryClient.getServices();
+		return list;
 	}
 	
 	@GetMapping("/comunicacao")
